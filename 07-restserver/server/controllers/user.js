@@ -12,13 +12,13 @@ app.get('/users', function(req, res) {
     let limit = req.query.limit || 5;
     limit = Number(limit);
 
-    User.find({}, 'name email role status google img')
+    User.find({ status: true }, 'name email role status google img')
         .skip(from)
         .limit(limit)
         .exec()
         .then(users => {
 
-            User.countDocuments({})
+            User.countDocuments({ status: true })
                 .skip(from)
                 .limit(limit)
                 .then(length => {
@@ -83,28 +83,17 @@ app.put('/user/:id', function(req, res) {
 
 app.delete('/user/:id', function(req, res) {
     let id = req.params.id;
-
-    User.findByIdAndRemove(id, (err, deletedUser) => {
+    User.findByIdAndUpdate(id, { status: false }, { new: true }, (err, userDB) => {
         if (err) {
-            return res.status(500).json({
+            res.status(400).json({
                 ok: false,
                 err
             });
         }
-
-        if (!deletedUser) {
-            res.status(404).json({
-                ok: false,
-                error: {
-                    msg: "User not found"
-                }
-            })
-        }
-
         res.json({
             ok: true,
-            user: deletedUser
-        })
+            user: userDB
+        });
     });
 });
 

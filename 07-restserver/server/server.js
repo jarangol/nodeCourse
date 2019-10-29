@@ -13,17 +13,17 @@ app.use(bodyParser.json());
 
 app.use(userController);
 
-mongoose.connect('mongodb://localhost:27017/nodejs-course', {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(res => {
-    console.log('Database online')
-}).catch(err => {
-    throw new Error('Error while connecting to mongo')
-});
+mongoose.connect(process.env.urlDB, {
+        useCreateIndex: true,
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }).then(console.log('Database online'))
+    .catch(err => {
+        throw new Error('Error while connecting to mongo')
+    });
 
 const port = process.env.PORT;
+
 app.listen(port, () => {
     console.log(`Listening to port ${port}`);
 });
