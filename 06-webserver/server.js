@@ -4,6 +4,8 @@ const app = express()
 const hbs = require('hbs');
 require('./hbs/helpers');
 
+const port = process.env.PORT || 3000;
+s
 hbs.registerPartials(__dirname + '/views/partials')
 app.use(express.static(__dirname + '/public'))
 
@@ -22,6 +24,6 @@ app.get('/about', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log("Listening to the port 3000");
+app.listen(port, () => {
+    console.log(`Listening to the port ${port}`);
 });
