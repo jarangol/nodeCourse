@@ -1,25 +1,25 @@
 const express = require('express')
 const app = express()
 
+const hbs = require('hbs');
+require('./hbs/helpers');
+
+hbs.registerPartials(__dirname + '/views/partials')
 app.use(express.static(__dirname + '/public'))
 
+app.set('view engine', 'hbs');
 
 app.get('/', (req, res) => {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    let output = {
-        name: 'John',
-        edad: 32,
-        url: req.url
-    }
-    res.write(JSON.stringify(output));
-
-    res.end();
+    res.render('home', {
+        name: 'Paolo rOdriGuez',
+        year: 2019
+    });
 });
 
-
-app.get('/data', (req, res) => {
-    res.write("Hello data");
-    res.end();
+app.get('/about', (req, res) => {
+    res.render('about', {
+        year: 2019
+    });
 });
 
 app.listen(3000, () => {
