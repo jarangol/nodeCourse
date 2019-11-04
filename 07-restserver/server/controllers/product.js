@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { verifyToken } = require('../middlewares/authentication');
+const { verifyToken, verifyAdminRole } = require('../middlewares/authentication');
 
 const app = express();
 
@@ -13,7 +13,8 @@ app.get('/products', verifyToken, (req, res) => {
     let limit = req.query.limit || 5;
     limit = Number(limit);
     Product.find({ available: true })
-        .skip(desde)
+        .skip(from)
+        .limit(limit)
         .populate('user', 'name email')
         .populate('category', 'description')
         .exec()
@@ -133,7 +134,7 @@ app.put('/product/:id', verifyToken, (req, res) => {
     });
 });
 
-app.delete('/product/:id', [verifyToken, verifyAdmin], (req, res) => {
+app.delete('/product/:id', [verifyToken, verifyAdminRole], (req, res) => {
     let id = req.params.id;
     Product.findById(id, (err, productDB) => {
         if (err) {

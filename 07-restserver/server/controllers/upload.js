@@ -57,16 +57,18 @@ app.put('/upload/:type/:id', function(req, res) {
     let fileName = `${id}-${ new Date().getMilliseconds() }.${fileExtension}`
 
     file.mv(`uploads/${ type }/${ fileName }`, (err) => {
-        if (err)
+        if (err) {
             return res.status(500).json({
                 ok: false,
                 err
             });
+        }
 
-        if (type === 'users')
+        if (type === 'users') {
             userImage(id, res, fileName);
-        else
+        } else {
             productImage(id, res, fileName);
+        }
     });
 
 
@@ -107,13 +109,41 @@ function userImage(id, res, fileName) {
 
 };
 
-function productImage() {
+function productImage(id, res, fileName) {
+    Product.findById(id, (err, productDB) => {
+        if (err) {
+            deleteFile(fileName, 'users');
+            return res.status(500)
+                .json({
+                    ok: false,
+                    err
+                });
+        }
+
+        if (!productDB) {
+            deleteFile(fileName, 'products');
+            return res.status(400)
+                .json({
+                    ok: false,
+                    msg: "Product does't exist."
+                });
+        }
+
+        deleteFile(productDB.img, 'products')
+        productDB.img = fileName;
+
+        productDB.save((err, savedProduct) => {
+            res.json({
+                ok: true,
+                product: savedProduct
+            });
+        });
+    });
 
 }
 
 function deleteFile(fileName, type) {
     let imagePath = path.resolve(__dirname, `../../uploads/${type}/${fileName}`);
-    console.log(imagePath);
 
     if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);

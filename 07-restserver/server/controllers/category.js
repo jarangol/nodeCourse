@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { verifyToken, verifyAdmin } = require('../middlewares/authentication');
+const { verifyToken, verifyAdminRole } = require('../middlewares/authentication');
 
 const app = express();
 
@@ -78,7 +78,7 @@ app.put('/category/:id', verifyToken, (req, res) => {
     let catDescription = {
         description: body.description
     }
-    Category.findByIdAndUpdate(id, catDescription, { new: true, runValidators: true }, (err, categoryDB) => {
+    Category.findByIdAndUpdate(id, catDescription, { new: true, runValidators: true, useFindAndModify: true }, (err, categoryDB) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -100,9 +100,9 @@ app.put('/category/:id', verifyToken, (req, res) => {
     });
 });
 
-app.delete('/category/:id', [verifyToken, verifyAdmin], (req, res) => {
+app.delete('/category/:id', [verifyToken, verifyAdminRole], (req, res) => {
     let id = req.params.id;
-    Category.findByIdAndDelete(id, (err, categoryDB) => {
+    Category.findByIdAndRemove(id, (err, categoryDB) => {
         if (err) {
             res.status(500).json({
                 ok: false,
@@ -114,14 +114,14 @@ app.delete('/category/:id', [verifyToken, verifyAdmin], (req, res) => {
             return res.status(500).json({
                 ok: false,
                 err: {
-                    msg: "The id doesn't exist"
+                    msg: "The id doesn't exist."
                 }
             });
         }
 
         res.json({
             ok: true,
-            msg: 'Category deleted'
+            msg: 'Category deleted.'
         });
     });
 });
