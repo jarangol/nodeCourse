@@ -16,15 +16,6 @@ io.on('connection', (client) => {
         console.log(data);
 
         client.broadcast.emit('sendMsg', data);
-        // if (msg.user) {
-        //     callback({
-        //         res: 'server -> client: Everything was ok.'
-        //     });
-        // } else {
-        //     callback({
-        //         res: 'server -> client: Everything was bad.'
-        //     });
-        // }
     });
 
 
