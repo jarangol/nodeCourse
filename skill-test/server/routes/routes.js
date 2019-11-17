@@ -7,5 +7,6 @@ app.use(bodyParser.json());
 
 app.use(require('../controllers/user'));
 app.use(require('../controllers/login'));
+app.use(require('../controllers/sort'));
 
 module.exports = app;

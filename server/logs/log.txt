@@ -1,0 +1,6 @@
+{ message: 'Hello Database online',
+  level: 'info',
+  timestamp: '2019-11-16T16:42:48.095Z' }
+{ message: 'Listening to port 3000',
+  level: 'info',
+  timestamp: '2019-11-16T16:42:48.359Z' }

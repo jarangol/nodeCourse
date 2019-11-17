@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
 
-const publicPath = path.resolve(__dirname, '../public');
+const publicPath = path.resolve(__dirname, '../public/assets');
 app.use(express.static(publicPath));
 
 app.use(require('./routes/routes'));
